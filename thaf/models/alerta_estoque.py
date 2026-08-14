@@ -29,3 +29,4 @@ class AlertaEstoque:
             f"{c3}Criado em:{reset} {self.criado_em}\n"
             f"{c1}=================================={reset}"
         )
+
