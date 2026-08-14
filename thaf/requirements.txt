@@ -1,0 +1,4 @@
+psycopg==3.3.4
+psycopg-binary==3.3.4
+python-dotenv==1.0.1
+bcrypt==4.2.0
