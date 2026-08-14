@@ -29,3 +29,4 @@ class MenuPrincipal:
             else:
                 print()
                 print("Opção inválida!")
+
