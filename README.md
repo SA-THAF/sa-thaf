@@ -1,4 +1,4 @@
-[Documentação no Notion](https://app.notion.com/p/Documenta-o-3bbf7d9bbc078058b88de57f85e50ba0?source=copy_link)
+[Documentação do Projeto no Notion](https://app.notion.com/p/SA-THAF-MA-78-dd1f7d9bbc07836f9c118118e76495f4?source=copy_link)
 
 # Padrões de commits 📜
 
