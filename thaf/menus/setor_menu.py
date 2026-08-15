@@ -1,7 +1,7 @@
 from models.setor import Setor
 from repositories.setor_repository import SetorRepository
 from soft_delete.setor_soft_delete import SetorSoftDelete
-from utils.setor_validacoes import validar_nome_setor
+from utils.setor__validacoes import validar_nome_setor
 
 
 class MenuSetor:

@@ -158,7 +158,7 @@ class SolicitacaoCompraRepository:
             return []
 
     def atualizar(self, solicitacao_compra):
-        sql = """UPDATE solicitacoes_compras
+        sql = """UPDATE ONLY solicitacoes_compras
         SET
             turma_id = %s,
             maquina_id = %s,
@@ -206,7 +206,7 @@ class SolicitacaoCompraRepository:
             return
 
         sql = """
-            DELETE FROM solicitacoes_compras
+            DELETE FROM ONLY solicitacoes_compras
             WHERE id_solicitacao = %s
         """
         try:

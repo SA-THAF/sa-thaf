@@ -9,6 +9,11 @@ class SolicitacaoServicoRepository:
     normalmente na tabela principal. Diferente do padrão IN-PLACE
     (perfis), aqui o cursor.rowcount do DELETE É confiável — não é
     necessário conferir existência antes de excluir().
+
+    IMPORTANTE: como solicitacoes_servico_deletados é filha por herança
+    de solicitacoes_servico, todo SELECT/UPDATE/DELETE aqui usa "ONLY
+    solicitacoes_servico" — sem o ONLY, o Postgres também
+    enxergaria/afetaria as solicitações já movidas para o histórico.
     """
 
     def __init__(self):
@@ -70,7 +75,7 @@ class SolicitacaoServicoRepository:
         SELECT id_ss, maquina_id, solicitante_id, responsavel_id,
                professor_validador_id, descricao_problema, prioridade_ss,
                tipo_manutencao, status, criado_em, atualizado_em
-        FROM solicitacoes_servico
+        FROM ONLY solicitacoes_servico
         WHERE id_ss = %s
         """
         try:
@@ -88,7 +93,7 @@ class SolicitacaoServicoRepository:
             SELECT id_ss, maquina_id, solicitante_id, responsavel_id,
                    professor_validador_id, descricao_problema, prioridade_ss,
                    tipo_manutencao, status, criado_em, atualizado_em
-            FROM solicitacoes_servico
+            FROM ONLY solicitacoes_servico
             ORDER BY criado_em DESC
         """
         try:
@@ -104,7 +109,7 @@ class SolicitacaoServicoRepository:
             SELECT id_ss, maquina_id, solicitante_id, responsavel_id,
                    professor_validador_id, descricao_problema, prioridade_ss,
                    tipo_manutencao, status, criado_em, atualizado_em
-            FROM solicitacoes_servico
+            FROM ONLY solicitacoes_servico
             WHERE status = %s
             ORDER BY criado_em DESC
         """
@@ -117,7 +122,7 @@ class SolicitacaoServicoRepository:
             return []
 
     def atualizar(self, solicitacao):
-        sql = """UPDATE solicitacoes_servico
+        sql = """UPDATE ONLY solicitacoes_servico
         SET
             maquina_id = %s,
             solicitante_id = %s,
@@ -155,7 +160,7 @@ class SolicitacaoServicoRepository:
 
     def excluir(self, id_ss):
         sql = """
-            DELETE FROM solicitacoes_servico
+            DELETE FROM ONLY solicitacoes_servico
             WHERE id_ss = %s
         """
         try:

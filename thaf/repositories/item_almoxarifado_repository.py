@@ -15,6 +15,11 @@ class ItemAlmoxarifadoRepository:
     - as consultas não precisam (e não devem) filtrar por deleted_at;
     - cursor.rowcount do DELETE é confiável, pois a exclusão realmente
       ocorre na tabela principal.
+
+    IMPORTANTE: como itens_almoxarifado_deletados é filha por herança de
+    itens_almoxarifado, todo SELECT/UPDATE/DELETE aqui usa "ONLY
+    itens_almoxarifado" — sem o ONLY, o Postgres também enxergaria/afetaria
+    as linhas já movidas para o histórico.
     """
 
     def __init__(self):
@@ -66,7 +71,7 @@ class ItemAlmoxarifadoRepository:
             SELECT id_ferramenta, nome_ferramenta, dimensao_ferramenta,
                    quantidade_atual, estoque_minimo, unidade_medida,
                    localizacao_gaveta
-            FROM itens_almoxarifado
+            FROM ONLY itens_almoxarifado
             WHERE id_ferramenta = %s
         """
         try:
@@ -84,7 +89,7 @@ class ItemAlmoxarifadoRepository:
             SELECT id_ferramenta, nome_ferramenta, dimensao_ferramenta,
                    quantidade_atual, estoque_minimo, unidade_medida,
                    localizacao_gaveta
-            FROM itens_almoxarifado
+            FROM ONLY itens_almoxarifado
             ORDER BY nome_ferramenta
         """
         try:
@@ -103,7 +108,7 @@ class ItemAlmoxarifadoRepository:
             SELECT id_ferramenta, nome_ferramenta, dimensao_ferramenta,
                    quantidade_atual, estoque_minimo, unidade_medida,
                    localizacao_gaveta
-            FROM itens_almoxarifado
+            FROM ONLY itens_almoxarifado
             WHERE quantidade_atual < estoque_minimo
             ORDER BY nome_ferramenta
         """
@@ -119,7 +124,7 @@ class ItemAlmoxarifadoRepository:
             return []
 
     def atualizar(self, item):
-        sql = """UPDATE itens_almoxarifado
+        sql = """UPDATE ONLY itens_almoxarifado
                   SET nome_ferramenta = %s,
                       dimensao_ferramenta = %s,
                       quantidade_atual = %s,
@@ -150,7 +155,7 @@ class ItemAlmoxarifadoRepository:
 
     def excluir(self, id_ferramenta):
         sql = """
-            DELETE FROM itens_almoxarifado
+            DELETE FROM ONLY itens_almoxarifado
             WHERE id_ferramenta = %s
         """
         try:

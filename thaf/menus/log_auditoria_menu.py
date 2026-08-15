@@ -8,12 +8,12 @@ from utils.log_auditoria_validacoes import (
 )
 
 
-class LogAuditoriaMenu:
+class MenuLogAuditoria:
     def __init__(self):
         self.repository = LogAuditoriaRepository()
         self.soft_delete = LogAuditoriaSoftDelete()
 
-    def exibir_menu(self):
+    def exibir(self):
         while True:
             print("\n===== MENU LOGS DE AUDITORIA =====")
             print("1 - Registrar log de auditoria")
@@ -42,6 +42,10 @@ class LogAuditoriaMenu:
             elif opcao == "7":
                 self.menu_excluidos()
             elif opcao == "0":
+                self.repository.fechar()
+                self.soft_delete.fechar()
+                print()
+                print("Voltando ao menu principal...")
                 break
             else:
                 print("Opção inválida!")

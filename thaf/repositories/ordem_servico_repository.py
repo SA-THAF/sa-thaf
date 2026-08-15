@@ -8,6 +8,11 @@ class OrdemServicoRepository:
     copia a linha inteira para ordens_servico_deletados e deixa o DELETE
     concluir normalmente na tabela principal. Diferente do padrão IN-PLACE
     (como em perfis), aqui o cursor.rowcount do DELETE é confiável.
+
+    IMPORTANTE: como ordens_servico_deletados é filha por herança de
+    ordens_servico, todo SELECT/UPDATE/DELETE aqui usa "ONLY
+    ordens_servico" — sem o ONLY, o Postgres também enxergaria/afetaria
+    as ordens já movidas para o histórico.
     """
 
     def __init__(self):
@@ -77,7 +82,7 @@ class OrdemServicoRepository:
         SELECT id_os, solicitacao_id, maquina_id, turma_id, tipo_manutencao,
                criticidade_os, descricao_execucao, pecas_usadas, data_execucao,
                hora_inicio, hora_fim, quantidade_pessoas, criado_em
-        FROM ordens_servico
+        FROM ONLY ordens_servico
         WHERE id_os = %s
         """
         try:
@@ -95,7 +100,7 @@ class OrdemServicoRepository:
             SELECT id_os, solicitacao_id, maquina_id, turma_id, tipo_manutencao,
                    criticidade_os, descricao_execucao, pecas_usadas, data_execucao,
                    hora_inicio, hora_fim, quantidade_pessoas, criado_em
-            FROM ordens_servico
+            FROM ONLY ordens_servico
             ORDER BY data_execucao DESC, id_os DESC
         """
         try:
@@ -114,7 +119,7 @@ class OrdemServicoRepository:
             SELECT id_os, solicitacao_id, maquina_id, turma_id, tipo_manutencao,
                    criticidade_os, descricao_execucao, pecas_usadas, data_execucao,
                    hora_inicio, hora_fim, quantidade_pessoas, criado_em
-            FROM ordens_servico
+            FROM ONLY ordens_servico
             WHERE maquina_id = %s
             ORDER BY data_execucao DESC, id_os DESC
         """
@@ -127,7 +132,7 @@ class OrdemServicoRepository:
             return []
 
     def atualizar(self, ordem_servico):
-        sql = """UPDATE ordens_servico
+        sql = """UPDATE ONLY ordens_servico
         SET
             turma_id = %s,
             tipo_manutencao = %s,
@@ -169,7 +174,7 @@ class OrdemServicoRepository:
         ordens_servico_deletados antes de concluir a remoção aqui.
         """
         sql = """
-            DELETE FROM ordens_servico
+            DELETE FROM ONLY ordens_servico
             WHERE id_os = %s
         """
         try:

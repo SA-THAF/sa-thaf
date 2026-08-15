@@ -13,6 +13,11 @@ class LogAuditoriaRepository:
  
     Para auditoria/histórico (registros ativos + excluídos), use
     listar_historico(), que consulta a view vw_todos_logs_auditoria.
+
+    IMPORTANTE: como logs_auditoria_deletados é filha por herança de
+    logs_auditoria, todo SELECT/DELETE aqui usa "ONLY logs_auditoria" —
+    sem o ONLY, o Postgres também enxergaria/afetaria os logs já movidos
+    para o histórico.
     """
  
     def __init__(self):
@@ -57,7 +62,7 @@ class LogAuditoriaRepository:
     def buscar_por_id(self, id_log):
         sql = """
         SELECT id, usuario_id, acao, endereco_ip, criado_em
-        FROM logs_auditoria
+        FROM ONLY logs_auditoria
         WHERE id = %s
         """
         try:
@@ -76,7 +81,7 @@ class LogAuditoriaRepository:
     def listar(self):
         sql = """
             SELECT id, usuario_id, acao, endereco_ip, criado_em
-            FROM logs_auditoria
+            FROM ONLY logs_auditoria
             ORDER BY criado_em DESC
         """
         try:
@@ -95,7 +100,7 @@ class LogAuditoriaRepository:
     def listar_por_usuario(self, usuario_id):
         sql = """
             SELECT id, usuario_id, acao, endereco_ip, criado_em
-            FROM logs_auditoria
+            FROM ONLY logs_auditoria
             WHERE usuario_id = %s
             ORDER BY criado_em DESC
         """
@@ -131,7 +136,7 @@ class LogAuditoriaRepository:
  
     def excluir(self, id_log):
         sql = """
-            DELETE FROM logs_auditoria
+            DELETE FROM ONLY logs_auditoria
             WHERE id = %s
         """
         try:
